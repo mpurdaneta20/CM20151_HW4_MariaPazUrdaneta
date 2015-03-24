@@ -1,0 +1,93 @@
+#Lee los datos desde internet 
+#Bogota<-read.table("http://data.giss.nasa.gov/tmp/gistemp/STATIONS/tmp_305802220000_14_0/station.txt", header=TRUE)
+#Bucaramanga<-read.table("http://data.giss.nasa.gov/tmp/gistemp/STATIONS/tmp_305800940000_14_0/station.txt", header=TRUE)
+#Barranquilla<-read.table("http://data.giss.nasa.gov/tmp/gistemp/STATIONS/tmp_305800280000_14_0/station.txt", header=TRUE)
+#Cali<-read.table("http://data.giss.nasa.gov/tmp/gistemp/STATIONS/tmp_305802590000_14_0/station.txt", header=TRUE)
+#Ipiales<-read.table("http://data.giss.nasa.gov/tmp/gistemp/STATIONS/tmp_305803700000_14_0/station.txt", header=TRUE)
+
+library(ggplot2)
+
+#Leer los datos desde un TextFile (Dependiendo del lugar en el que se encuencuentran los archivos debe )
+Barranquilla <- read.table("C:/Users/Paz U/Desktop/Temperatura/Barranquilla.txt", header=TRUE, quote="\"")
+Bogota <- read.table("C:/Users/Paz U/Desktop/Temperatura/Bogota.txt", header=TRUE, quote="\"")
+Bucaramanga <- read.table("C:/Users/Paz U/Desktop/Temperatura/Bucaramanga.txt", header=TRUE, quote="\"")
+Cali <- read.table("C:/Users/Paz U/Desktop/Temperatura/Cali.txt", header=TRUE, quote="\"")
+Ipiales <- read.table("C:/Users/Paz U/Desktop/Temperatura/Ipiales.txt", header=TRUE, quote="\"")
+
+#Agrega la ciudad
+Barranquilla$Ciudad<-"Barranquilla"
+Bogota$Ciudad<-"Bogotá"
+Bucaramanga$Ciudad<-"Bucaramanga"
+Cali$Ciudad<-"Cali"
+Ipiales$Ciudad<-"Ipiales"
+
+#Crea la Lista
+listaP<-list(Barranquilla,Bogota,Bucaramanga,Cali,Ipiales)
+
+#Crea los Nombres
+nombres<-c("Barranquilla","Bogota","Bucaramanga","Cali","Ipiales")
+
+
+#DataFrame vacio
+df<-data.frame(Yr=rep(1951:2015,12*5),Mes=rep(1:12,65*5),Fecha=0,Ciudad=as.character(" "),Temperatura=0,stringsAsFactors=FALSE)
+
+#Recorre los Archivos
+for(p in 1:5)
+{
+  data<-as.data.frame(listaP[p])
+  #Numero de filas del dataset
+  x<-nrow(data)
+  #Año de inicio del dataset
+  ini<-data[1,1]
+  #Año final del dataset
+  fin<-data[x,1]
+  #Inicio set en ceros
+  z<-0
+  #Diferencia entre el año inicial del set y el año base (año mas antiguo entre los 5 datasets)
+  dif<-ini-1951
+  #Recorrido fila y columna del dataframe
+  for(i in 1:65)
+  {
+    for(j in 1:12)
+    {
+      #Mes
+      df[((i-1)*60)+(5*(j-1))+p,2]<-format(as.Date(paste(1950+i,df[((i-1)*60)+(5*(j-1))+p,2],"01",sep="-")),format='%B')
+      #Fecha
+      df[((i-1)*60)+(5*(j-1))+p,3]<-format(as.Date(paste(1950+i,j,"01",sep="-")))
+      #Ciudad
+      df[((i-1)*60)+(5*(j-1))+p,4]<-nombres[p]
+      #Le asigno el valor de No Aplica cuando el año evaluado es mayor o menor al rango previsto
+      if(1950+i<ini|1950+i>fin)
+      {
+        df[((i-1)*60)+(5*(j-1))+p,5]<-NaN
+      }
+      #recorre el dataset(de la ciudad) y toma la temperatura correspondiente a la fecha
+      else
+      {
+        z<-data[i-dif,1+j]
+        #Si la temperatura correspondiente toma el valor de 999.9 se le asigna No Aplica
+        if(z==999.9)
+        {
+          df[((i-1)*60)+(5*(j-1))+p,5]<-NaN
+        }
+        #Toma el valor de la temperatura
+        else
+        {
+          df[((i-1)*60)+(5*(j-1))+p,5]<-z
+        }
+      }
+    }
+  }
+}
+
+#El data frame se convierte en un archivo .csv
+write.table(df, file = "temperaturas.csv",col.names = TRUE, row.names = FALSE)
+read.csv("temperaturas.csv")
+
+#Se grafica la serie de tiempo para cada una de las 5 ciudades en un unico grafico (las ciudades se distinguen por 5 colores diferente)
+png(filename="TemperaturaAnual.png", width = 800, height = 800)
+gp <- ggplot(df) + geom_point(aes(x=Fecha,y = Temperatura, color=Ciudad)) + scale_x_discrete(breaks=c("1951-01-01", "1983-06-01", "2015-12-01"))
+gp <- gp + labs(title="Temperatura de las ciudades principales de Colombia")
+gp
+dev.off()
+
