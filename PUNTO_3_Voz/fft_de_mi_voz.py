@@ -2,7 +2,7 @@
 # <nbformat>3.0</nbformat>
 
 
-from pylab import*
+from pylab import *
 
 from scipy.io import wavfile
 
