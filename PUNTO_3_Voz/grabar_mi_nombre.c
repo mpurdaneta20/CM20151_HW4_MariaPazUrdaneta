@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*
+PUNTO 3A
+*/
+
 int main(){
 /*
 Comienza a grabar y el usuario tiene 10 segundos para grabar su nombre

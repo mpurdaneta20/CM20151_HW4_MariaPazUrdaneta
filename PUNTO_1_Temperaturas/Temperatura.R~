@@ -25,12 +25,13 @@ Ipiales$Ciudad<-"Ipiales"
 listaP<-list(Barranquilla,Bogota,Bucaramanga,Cali,Ipiales)
 
 #Crea los Nombres
-nombres<-c("Barranquilla","Bogota","Bucaramanga","Cali","Ipiales")
-
-
+nombres<-c("Barranquilla","Bogotá","Bucaramanga","Cali","Ipiales")
+#Borra los Frames para ahorra memoria.
+remove(Barranquilla,Bogota,Bucaramanga,Cali,Ipiales)
 #DataFrame vacio
-df<-data.frame(Yr=rep(1951:2015,12*5),Mes=rep(1:12,65*5),Fecha=0,Ciudad=as.character(" "),Temperatura=0,stringsAsFactors=FALSE)
-
+df<-data.frame(yr=rep(1951:2015,12*5),Mes=rep(1:12,65*5),Fecha=0,Ciudad=as.character(" "),Temperatura=0,stringsAsFactors=FALSE)
+#Ordena los datos
+df<-df[do.call(order,df),]
 #Recorre los Archivos
 for(p in 1:5)
 {
@@ -91,3 +92,16 @@ gp <- gp + labs(title="Temperatura de las ciudades principales de Colombia")
 gp
 dev.off()
 
+
+#Con el fin de poder hacer la interpolacion se divide para cada una de las ciudades
+bog <- df[df$Ciudad=="Bogotá",]
+bquilla <- df[df$Ciudad=="Barranquilla",]
+ipiales <- df[df$Ciudad=="Ipiales",]
+cali <- df[df$Ciudad=="Cali",]
+bucara <- df[df$Ciudad=="Bucaramanga",]
+
+write.table(bog, file = "Bogota.csv",col.names = TRUE, row.names = FALSE)
+write.table(bquilla, file = "Barranquilla.csv",col.names = TRUE, row.names = FALSE)
+write.table(ipiales, file = "Ipiales.csv",col.names = TRUE, row.names = FALSE)
+write.table(cali, file = "Cali.csv",col.names = TRUE, row.names = FALSE)
+write.table(bucara, file = "Bucaramanga.csv",col.names = TRUE, row.names = FALSE)

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # <nbformat>3.0</nbformat>
 
-from pylab import*
+#PUNTO 2B
+from pylab import *
 
 from mpl_toolkits.basemap import Basemap
 import csv
-
-
+from pandas import *
 
 File = open('top_300_rios.csv', 'r+')
 csvFile = csv.reader(File)
@@ -14,13 +14,18 @@ RIOS=[]
 for i in range(150):
     R=csvFile.next()
     RIOS.append(R)
-LAT=[]
+
+RIOS=pandas.read_csv('top_300_rios.csv', sep=' ',header=None, usecols=[1,2])
+
 LON=[]
-for row in RIOS:
-    LAT.append(float(row[2]))
-    LON.append(float(row[1]))
+for item in RIOS[1]:
+    LON.append(float(item))
+#print LON
 
-
+LAT=[]
+for item in RIOS[2]:
+    LAT.append(float(item))
+#print LAT
 
 map = Basemap(projection='kav7',lon_0=180)
 # plot linea costera, meridianos y paralelos
@@ -32,6 +37,4 @@ lats = LAT
 x,y = map(lons, lats)
 map.plot(x, y, 'bo', markersize=4)
 show()
-
-
 

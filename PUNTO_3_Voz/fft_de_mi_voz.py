@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # <nbformat>3.0</nbformat>
 
-
+#PUNTO 3C
 from pylab import *
 
 from scipy.io import wavfile
