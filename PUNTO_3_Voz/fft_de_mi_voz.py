@@ -42,6 +42,5 @@ plot(POSICION,MAXIMO,'ro')
 show()
 #Basandose en la teoria fisica, se tiene que para las ondas de tipo "SAWTOOTH" el maximo armonico es igual a la maxima amplitud. Dado que n=1 se tiene que Armonico_n=(1/n)*Amplitud_n, luego para 1 Armonico_max=Amplitud_1
 
-# <codecell>
 
 

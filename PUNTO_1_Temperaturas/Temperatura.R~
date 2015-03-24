@@ -5,6 +5,8 @@
 #Cali<-read.table("http://data.giss.nasa.gov/tmp/gistemp/STATIONS/tmp_305802590000_14_0/station.txt", header=TRUE)
 #Ipiales<-read.table("http://data.giss.nasa.gov/tmp/gistemp/STATIONS/tmp_305803700000_14_0/station.txt", header=TRUE)
 
+library(ggplot2)
+
 #Leer los datos desde un TextFile (Dependiendo del lugar en el que se encuencuentran los archivos debe )
 Barranquilla <- read.table("C:/Users/Paz U/Desktop/Temperatura/Barranquilla.txt", header=TRUE, quote="\"")
 Bogota <- read.table("C:/Users/Paz U/Desktop/Temperatura/Bogota.txt", header=TRUE, quote="\"")
@@ -23,15 +25,12 @@ Ipiales$Ciudad<-"Ipiales"
 listaP<-list(Barranquilla,Bogota,Bucaramanga,Cali,Ipiales)
 
 #Crea los Nombres
-nombres<-c("Barranquilla","Bogotá","Bucaramanga","Cali","Ipiales")
+nombres<-c("Barranquilla","Bogota","Bucaramanga","Cali","Ipiales")
 
-#Borra los Frames para ahorra memoria.
-#remove(Barranquilla,Bogota,Bucaramanga,Cali,Ipiales)
 
 #DataFrame vacio
 df<-data.frame(Yr=rep(1951:2015,12*5),Mes=rep(1:12,65*5),Fecha=0,Ciudad=as.character(" "),Temperatura=0,stringsAsFactors=FALSE)
-#Ordena los datos
-df<-df[do.call(order,df),]
+
 #Recorre los Archivos
 for(p in 1:5)
 {
@@ -54,7 +53,7 @@ for(p in 1:5)
       #Mes
       df[((i-1)*60)+(5*(j-1))+p,2]<-format(as.Date(paste(1950+i,df[((i-1)*60)+(5*(j-1))+p,2],"01",sep="-")),format='%B')
       #Fecha
-      df[((i-1)*60)+(5*(j-1))+p,3]<-format(as.Date(paste(1950+i,j,"01",sep="-")),format='%b/%Y/%d')
+      df[((i-1)*60)+(5*(j-1))+p,3]<-format(as.Date(paste(1950+i,j,"01",sep="-")))
       #Ciudad
       df[((i-1)*60)+(5*(j-1))+p,4]<-nombres[p]
       #Le asigno el valor de No Aplica cuando el año evaluado es mayor o menor al rango previsto
@@ -87,7 +86,8 @@ read.csv("temperaturas.csv")
 
 #Se grafica la serie de tiempo para cada una de las 5 ciudades en un unico grafico (las ciudades se distinguen por 5 colores diferente)
 png(filename="TemperaturaAnual.png", width = 800, height = 800)
-gp <- ggplot(df) + geom_point(aes(x=Yr,y = Temperatura, color=Ciudad))
+gp <- ggplot(df) + geom_point(aes(x=Fecha,y = Temperatura, color=Ciudad)) + scale_x_discrete(breaks=c("1951-01-01", "1983-06-01", "2015-12-01"))
 gp <- gp + labs(title="Temperatura de las ciudades principales de Colombia")
 gp
 dev.off()
+
