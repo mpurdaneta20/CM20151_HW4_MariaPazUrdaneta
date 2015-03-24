@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # <nbformat>3.0</nbformat>
 
+#PUNTO 2B
 from pylab import *
 
 from mpl_toolkits.basemap import Basemap
 import csv
+import pandas
 from pandas import *
 
 File = open('top_300_rios.csv', 'r+')

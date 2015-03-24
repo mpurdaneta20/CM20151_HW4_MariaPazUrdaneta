@@ -3,8 +3,10 @@
 
 #PUNTO 2A
 import urllib
+import os
 from os import system
 import csv
+import numpy as np
 
 urllib.urlretrieve("http://www.cgd.ucar.edu/cas/catalog/surface/dai-runoff/coastal-stns-byVol-updated-oct2007.txt","RIOS.txt")
 
@@ -19,10 +21,11 @@ for item in data:
     csvwriter.writerow(item)
 csvfile.close()
 
+import pandas
 from pandas import *
 df=pandas.read_csv('Rios.csv', sep=',',header=None)
-#La columna 4 indica el la taza de flujo de agua.
-df=df.sort(columns=4,ascending=False)
+#La columna 1 indica la razon en m2.
+df=df.sort(columns=0,ascending=False)
 
 RIOS=df[0:299]
 #print RIOS

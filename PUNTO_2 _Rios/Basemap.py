@@ -6,6 +6,7 @@ from pylab import *
 
 from mpl_toolkits.basemap import Basemap
 import csv
+import pandas
 from pandas import *
 
 File = open('top_300_rios.csv', 'r+')
